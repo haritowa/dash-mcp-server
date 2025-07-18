@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "mcp__dash-api__search_documentation"
-    ],
-    "deny": []
-  }
-}
