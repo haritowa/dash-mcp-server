@@ -2,17 +2,19 @@
 
 A Model Context Protocol (MCP) server that provides tools to interact with the [Dash](https://kapeli.com/dash) documentation browser API.
 
+Dash 8 is required, which is currently in beta. You can download Dash 8 at https://blog.kapeli.com/dash-8.
+
 ## Overview
 
-The Dash MCP server provides tools for accessing and searching documentation directly from Dash, the macOS documentation browser. AI agents can:
+The Dash MCP server provides tools for accessing and searching documentation directly from Dash, the macOS documentation browser. MCP clients can:
 
 - List installed docsets
 - Search across docsets and code snippets
 - Enable full-text search for specific docsets
 
-### Tips
+### Notice
 
-For best results, ensure you have relevant docsets installed in Dash for the APIs you're working with.
+This is a work in progress. Any suggestions are welcome!
 
 ## Tools
 
@@ -60,8 +62,3 @@ brew install uv
 ```bash
 claude mcp add dash-api -- uvx --from "git+https://github.com/Kapeli/dash-mcp-server.git" "dash-mcp-server"
 ```
-
-
-## License
-
-MIT
