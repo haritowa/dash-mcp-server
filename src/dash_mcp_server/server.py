@@ -123,7 +123,6 @@ class DocsetInfo(BaseModel):
     name: str = Field(description="Display name of the docset")
     identifier: str = Field(description="Unique identifier")
     platform: str = Field(description="Platform/type of the docset")
-    path: str = Field(description="File system path")
     full_text_search: str = Field(description="Full-text search status: 'not supported', 'disabled', 'indexing', or 'enabled'")
     notice: Optional[str] = Field(description="Optional notice about the docset status", default=None)
 
@@ -162,7 +161,6 @@ async def list_installed_docsets(ctx: Context) -> list[DocsetInfo]:
                 name=docset["name"],
                 identifier=docset["identifier"],
                 platform=docset["platform"],
-                path=docset["path"],
                 full_text_search=docset["full_text_search"],
                 notice=docset.get("notice")
             )
