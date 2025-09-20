@@ -2,6 +2,7 @@ from typing import Optional
 import httpx
 import subprocess
 import json
+import os
 from pathlib import Path
 from mcp.server.fastmcp import FastMCP
 from mcp.server.fastmcp import Context
@@ -10,9 +11,8 @@ from pydantic import BaseModel, Field
 mcp = FastMCP("Dash Documentation API")
 
 
-async def check_api_health(ctx: Context, port: int) -> bool:
-    """Check if the Dash API server is responding at the given port."""
-    base_url = f"http://127.0.0.1:{port}"
+async def check_api_health(ctx: Context, base_url: str) -> bool:
+    """Check if the Dash API server is responding at the given URL."""
     try:
         with httpx.Client(timeout=5.0) as client:
             response = client.get(f"{base_url}/health")
@@ -25,6 +25,17 @@ async def check_api_health(ctx: Context, port: int) -> bool:
 
 
 async def working_api_base_url(ctx: Context) -> Optional[str]:
+    # Check for custom API URL from environment variable first
+    custom_url = os.getenv("DASH_API_URL")
+    if custom_url:
+        await ctx.debug(f"Using custom Dash API URL from DASH_API_URL: {custom_url}")
+        if await check_api_health(ctx, custom_url):
+            return custom_url
+        else:
+            await ctx.error(f"Custom Dash API URL is not responding: {custom_url}")
+            return None
+    
+    # Fall back to automatic detection
     dash_running = await ensure_dash_running(ctx)
     if not dash_running:
         return None
@@ -69,7 +80,8 @@ async def get_dash_api_port(ctx: Context) -> Optional[int]:
                 return None
                 
         # Check if the API server is actually responding
-        if await check_api_health(ctx, port):
+        base_url = f"http://127.0.0.1:{port}"
+        if await check_api_health(ctx, base_url):
             return port
         else:
             return None

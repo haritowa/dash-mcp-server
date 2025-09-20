@@ -66,3 +66,38 @@ brew install uv
 ```bash
 claude mcp add dash-api -- uvx --from "git+https://github.com/Kapeli/dash-mcp-server.git" "dash-mcp-server"
 ```
+
+### Custom API URL
+
+By default, the server automatically detects the Dash API server running on localhost. If you need to use a custom Dash API URL (e.g., for remote Dash instances or custom configurations), you can set the `DASH_API_URL` environment variable:
+
+#### in `claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+      "dash-api": {
+          "command": "uvx",
+          "args": [
+              "--from",
+              "git+https://github.com/Kapeli/dash-mcp-server.git",
+              "dash-mcp-server"
+          ],
+          "env": {
+              "DASH_API_URL": "http://your-custom-dash-api-url:port"
+          }
+      }
+  }
+}
+```
+
+#### in `Claude Code`
+
+```bash
+DASH_API_URL="http://your-custom-dash-api-url:port" claude mcp add dash-api -- uvx --from "git+https://github.com/Kapeli/dash-mcp-server.git" "dash-mcp-server"
+```
+
+When `DASH_API_URL` is set, the server will:
+- Skip automatic port detection and Dash launching
+- Use the provided URL directly
+- Perform a health check to ensure the API is responding
